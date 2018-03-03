@@ -1,54 +1,106 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import Articles from './Components/Articles';
+// import './App.css';
+import './temp.css';
+
+import firebase from './firebase.js';
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      newSources: [],
+      string1: "#",
+      currSource: 0,
+      isLoading: true,
+    }
+  }
+
+  // Get data from Firebase
+  componentWillMount() {
+    const itemsRef = firebase.database().ref("Articles");
+    itemsRef.on('value', (snapshot) => {
+      let items = snapshot.val();
+      let newState = [];
+      for (let item in items) {
+        newState.push(item)
+      }
+      this.setState({
+        newSources: newState,
+        currSource: newState[0],
+      });
+    });
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoading: false,
+    });
+    console.log(this.state.currSource)
+  }
+
+  changeSource = () => {
+
+};
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      // <div className="App">
+      //   <header className="App-header">
+      //     <img src={logo} className="App-logo" alt="logo" />
+      //     <h1 className="App-title">Welcome to React</h1>
+      //   </header>
+      //   <p className="App-intro">
+      //     To get started, edit <code>src/App.js</code> and save to reload.
+      //   </p>
 
-        <div class="container">
-          <h2>Accordion Example</h2>
+      //   {/* <Articles></Articles> */}
 
-          {/* Panel 1 */}
-          <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>
-                </h4>
+      // </div>
+
+      this.state.isLoading ? <div></div> : 
+      <div class="container">
+        <main role="main" class="container">
+          <div class="row">
+          <Articles values={this.state.currSource} load={this.state.isLoading}>
+          {/* {console.log(this.state.currSource)} */}
+          </Articles>
+            
+            {/* ------------- SIDEBAR ------------- */}
+
+            <aside class="col-md-4 blog-sidebar">
+              <div class="p-3 mb-3 bg-light rounded">
+                <h4 class="font-italic">About</h4>
+                <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
               </div>
-              <div id="collapse1" class="panel-collapse collapse in">
-                <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+
+              <div class="p-3">
+                <h4 class="font-italic">Archives</h4>
+                <ol class="list-unstyled mb-0">
+                {this.state.newSources.map((i) => {
+                  return (
+                    <li><a href="#">{i}</a></li>
+                  )
+                  })}
+                </ol>
               </div>
-            </div>
+
+              {/* <div class="p-3">
+                <h4 class="font-italic">Elsewhere</h4>
+                <ol class="list-unstyled">
+                  <li><a href="#">GitHub</a></li>
+                  <li><a href="#">Twitter</a></li>
+                  <li><a href="#">Facebook</a></li>
+                </ol>
+              </div> */}
+
+            </aside>
           </div>
-          {/* Panel 2   */}
-          <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Collapsible Group 2</a>
-                </h4>
-              </div>
-              <div id="collapse2" class="panel-collapse collapse in">
-                <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        </main>
       </div>
     );
   }
