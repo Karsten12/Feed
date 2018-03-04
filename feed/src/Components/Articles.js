@@ -7,39 +7,51 @@ class Articles extends Component {
       super(props);
       
       this.state = {
-        items: [],
-        articleName: this.props.values,
+        items: []
+      }
+    }
+
+    loadData = () => {
+      console.log(this.props);
+
+      const articleReference = "Articles/" + this.props.values;
+
+      firebase.database().ref(articleReference).on('value', (snapshot) => {
+        const items = snapshot.val();
+        let newState = [];
+
+        for (const article of items) {
+          newState.push({
+            title: article.title,
+            description: article.description,
+            author: article.author,
+            publishDate: article.publishedAt
+          });
+        }
+
+        this.setState({
+          items: newState
+        });
+      });
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (this.props !== nextProps) {
+        this.loadData();
       }
     }
     
     // Get data from Firebase
     componentDidMount() {
-      var articleReference = "Articles" + "/" + this.state.articleName
-      console.log(articleReference)
-      const itemsRef = firebase.database().ref(articleReference);
-      itemsRef.on('value', (snapshot) => {
-        let items = snapshot.val();
-        let newState = [];
-        for (let item in items) {
-          newState.push({
-            title: items[item].title,
-            description: items[item].description,
-            author: items[item].author,
-            publishDate: items[item].publishedAt
-          });
-        }
-        this.setState({
-          items: newState,
-        });
-      });
+      this.loadData();
     }
 
     render() {
       return (
         <div class="col-md-8 blog-main">
-            {this.state.items.map((item) => {
+            {this.state.items.map((item, index) => {
               return (  
-                <div class="blog-post">
+                <div class="blog-post" key={index}>
                   <h2 class="blog-post-title">{item.title}</h2>
                   <p class="blog-post-meta">January 1, 2014 by <a href="#">{item.author}</a></p>
                   <hr></hr>
