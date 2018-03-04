@@ -9,9 +9,7 @@ class Articles extends Component {
       
       this.state = {
         items: [],
-        string1: "#",
         articleName: this.props.values,
-        loaded: this.props.load
       }
     }
     
@@ -23,10 +21,14 @@ class Articles extends Component {
         const itemsRef = firebase.database().ref(refer);
         itemsRef.on('value', (snapshot) => {
           let items = snapshot.val();
-          // let idk = items.indexOf(this.props.values);
           let newState = [];
           for (let item in items) {
-            console.log(item)
+            newState.push({
+              title: items[item].title,
+              description: items[item].description,
+              author: items[item].author,
+              publishDate: items[item].publishedAt
+            });
           }
           this.setState({
             items: newState,
@@ -35,31 +37,6 @@ class Articles extends Component {
       };
     }
 
-  
-    // render() {
-    //   return (
-    //       <div class="container">  
-    //         {this.state.items.map((item) => {
-    //           return (  
-    //             <div class="panel-group" id="accordion">
-    //               <div class="panel panel-default">
-    //                 <div class="panel-heading">
-    //                   <h4 class="panel-title">
-    //                     <a data-toggle="collapse" data-parent="#accordion" href={this.state.string1.concat(item.id)}>{item.title}</a>
-    //                   </h4>
-    //                 </div>
-    //                 <div id={item.id} class="panel-collapse collapse in">
-    //                   <div class="panel-body">{item.summary}</div>
-    //                 </div>
-    //               </div>
-    //             </div>
-    //           )
-    //         })}
-    //       </div>
-    //   );
-    // }
-
-
     render() {
       return (
         <div class="col-md-8 blog-main">
@@ -67,9 +44,9 @@ class Articles extends Component {
               return (  
                 <div class="blog-post">
                   <h2 class="blog-post-title">{item.title}</h2>
-                  <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+                  <p class="blog-post-meta">January 1, 2014 by <a href="#">{item.author}</a></p>
                   <hr></hr>
-                  <p>{item.summary}</p>
+                  <p>{item.description}</p>
                 </div>
               )
             })}      
