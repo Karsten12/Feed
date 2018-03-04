@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import Articles from './Components/Articles';
 import Header from './Components/Header';
-// import './App.css';
-// import './temp.css';
 
 import firebase from './firebase.js';
 
@@ -11,7 +8,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       newSources: [],
       string1: "#",
@@ -22,10 +18,6 @@ class App extends Component {
 
   // Get data from Firebase
   componentDidMount() {
-    // this.setState({
-    //   isLoading: false,
-    // });
-    // console.log(this.state.currSource)
     const itemsRef = firebase.database().ref("Articles");
     itemsRef.on('value', (snapshot) => {
       let items = snapshot.val();
@@ -43,38 +35,18 @@ class App extends Component {
     });
   }
 
-  changeSource = () => {
-    
-  }
-
-
   render() {
-    console.log("RENDER")
     if (!this.state.isLoading && this.state.currSource!=0) {
       return (
-        // <div className="App">
-        //   <header className="App-header">
-        //     <img src={logo} className="App-logo" alt="logo" />
-        //     <h1 className="App-title">Welcome to React</h1>
-        //   </header>
-        //   <p className="App-intro">
-        //     To get started, edit <code>src/App.js</code> and save to reload.
-        //   </p>
-  
-        //   {/* <Articles></Articles> */}
-  
-        // </div>
-  
         <div>
-          {/* <Header/> */}
-          <div class="container">
-            <main role="main" class="container">
+          <Header/>
+          <div className="container">
+            <main role="main">
               <div class="row">
-              <Articles values={this.state.currSource}>
-              </Articles>
+
+              <Articles values={this.state.currSource}/>
                 
                 {/* ------------- SIDEBAR ------------- */}
-  
                 <aside class="col-md-4 blog-sidebar">
                   <div class="p-3 mb-3 bg-light rounded">
                     <h4 class="font-italic">About</h4>
@@ -86,7 +58,8 @@ class App extends Component {
                     <ol class="list-unstyled mb-0">
                     {this.state.newSources.map((i) => {
                       return (
-                        <li><a href="#">{i}</a></li>
+                        // i = CNN now instead of ARS-TECHNICA
+                        <li><a onClick={() => this.setState({currSource: i})} >{i}</a></li>
                       )
                       })}
                     </ol>

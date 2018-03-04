@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import firebase from '../firebase.js';
-import './Articles.css';
+import './css/Articles.css';
 
 class Articles extends Component {
-
     constructor(props) {
       super(props);
       
@@ -15,26 +14,24 @@ class Articles extends Component {
     
     // Get data from Firebase
     componentDidMount() {
-      if (!this.state.loaded) {
-        var refer = "Articles" + "/" + this.state.articleName
-        console.log(refer)
-        const itemsRef = firebase.database().ref(refer);
-        itemsRef.on('value', (snapshot) => {
-          let items = snapshot.val();
-          let newState = [];
-          for (let item in items) {
-            newState.push({
-              title: items[item].title,
-              description: items[item].description,
-              author: items[item].author,
-              publishDate: items[item].publishedAt
-            });
-          }
-          this.setState({
-            items: newState,
+      var articleReference = "Articles" + "/" + this.state.articleName
+      console.log(articleReference)
+      const itemsRef = firebase.database().ref(articleReference);
+      itemsRef.on('value', (snapshot) => {
+        let items = snapshot.val();
+        let newState = [];
+        for (let item in items) {
+          newState.push({
+            title: items[item].title,
+            description: items[item].description,
+            author: items[item].author,
+            publishDate: items[item].publishedAt
           });
+        }
+        this.setState({
+          items: newState,
         });
-      };
+      });
     }
 
     render() {
