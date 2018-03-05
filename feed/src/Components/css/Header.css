@@ -5,7 +5,7 @@
     width: 100%;
 }
 
-.navbar {
+.navbar1 {
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -33,10 +33,22 @@
     }
 }
 
-.navbar-light .navbar-nav .nav-link {
+.navbar-light .navbar-nav .nav-link1{
     color: white;
 }
+.nav-link1 {
+    font-size:16px; 
+}
 
-.navbar-light .navbar-nav .nav-link:hover {
+.navbar-brand {
+    margin-bottom: 4px;
+}
+
+.navbar-nav {
+    padding-left: 40px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+.navbar-light .navbar-nav .nav-link1:hover {
     color: gray;
 }
