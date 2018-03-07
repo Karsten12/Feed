@@ -1,5 +1,5 @@
 from newsapi import NewsApiClient
-import pyrebase
+# import pyrebase
 import json
 import datetime
 # Firebase admin packages
@@ -12,18 +12,29 @@ from firebase_admin import db
 
 #  Class variables 
 newsapi = NewsApiClient(api_key='21b90e53af6a4713baf4fd0d3d33cd2b')
-# firebase = None
 
-# def initFirebase():
+def initFirebase_viaADMIN():
+    # Fetch the service account key JSON file contents
+    cred = credentials.Certificate('./feedKEY.json')
+    # Initialize the app with a service account, granting admin privileges
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": "https://feed-b8503.firebaseio.com"
+    })
+    getNews()
+
+# def initFirebase_viaPYRE(){
 #     config = {
-#         "apiKey": "AIzaSyBj3mbnomNrReTYcUG8rvz-KJ0FfTXA0w4",
-#         "authDomain": "feed-b8503.firebaseapp.com",
-#         "databaseURL": "https://feed-b8503.firebaseio.com",
-#         "projectId": "feed-b8503",
-#         "storageBucket": "feed-b8503.appspot.com",
-#         "messagingSenderId": "519738845227"
+#     "apiKey": "AIzaSyBj3mbnomNrReTYcUG8rvz-KJ0FfTXA0w4",
+#     "authDomain": "feed-b8503.firebaseapp.com",
+#     "databaseURL": "https://feed-b8503.firebaseio.com",
+#     "projectId": "feed-b8503",
+#     "storageBucket": "feed-b8503.appspot.com",
+#     "messagingSenderId": "519738845227"
 #     }
-#     firebase = pyrebase.initialize_app(config)
+#     # firebase = pyrebase.initialize_app(config)
+#     # db = firebase.database()
+#     results = db.reference("Articles").child(dataSource).set(data)
+# }
 
 def getNews():
     # initFirebase()
@@ -42,21 +53,7 @@ def readJson(source, inputJson):
 
 
 def addToFirebase(dataSource, data):
-    config = {
-        "apiKey": "AIzaSyBj3mbnomNrReTYcUG8rvz-KJ0FfTXA0w4",
-        "authDomain": "feed-b8503.firebaseapp.com",
-        "databaseURL": "https://feed-b8503.firebaseio.com",
-        "projectId": "feed-b8503",
-        "storageBucket": "feed-b8503.appspot.com",
-        "messagingSenderId": "519738845227"
-    }
-    firebase = pyrebase.initialize_app(config)
-
-    # curDate = datetime.datetime.today().strftime('%Y-%m-%d')
-
-    db = firebase.database()
-    # ref = db.reference('server/saving-data/fireblog')
-    results = db.child("Articles").child(dataSource).set(data)
+    results = db.reference("Articles").child(dataSource).set(data)
 
 if __name__ == '__main__':
-    getNews()
+    initFirebase()

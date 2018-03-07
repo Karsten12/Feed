@@ -24,7 +24,7 @@ class App extends Component {
       let newState = [];
       for (let item in items) {
         newState.push(item)
-						}
+      }
 						
       this.setState({
         newSources: newState,
@@ -32,7 +32,7 @@ class App extends Component {
       }, this.setState({
         isLoading: false
         })
-						);
+      );
 						
     });
   }
@@ -53,7 +53,6 @@ class App extends Component {
           <div className="container">
             <main role="main">
               <div class="row">
-
               <Articles values={this.state.currSource}/>
                 
                 {/* ------------- SIDEBAR ------------- */}
