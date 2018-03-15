@@ -1,52 +1,70 @@
 import React, { Component } from 'react';
 import Articles from './Components/Articles';
+
 import Header from './Components/Header';
 
 import firebase from './firebase.js';
 
 class App extends Component {
 		constructor(props) {
-				super(props);
+			super(props);
 				
-    this.state = {
-      newSources: [],
-      // string1: "#",
-      currSource: 0,
-      isLoading: true
+      this.state = {
+        Sources: [],
+        items: [],
+        isLoading: true,
+        currSource: []
+      }
+      this.loadData = this.loadData.bind(this);
     }
-  }
 
   // Get data from Firebase
   componentDidMount() {
-
     firebase.database().ref("Articles").on('value', (snapshot) => {
       let items = snapshot.val();
       let newState = [];
       for (let item in items) {
         newState.push(item)
-      }
-						
+      }			
       this.setState({
-        newSources: newState,
-        currSource: newState[0],
-      }, this.setState({
-        isLoading: false
-        })
-      );
-						
+        Sources: newState,
+      });
+      this.loadData();
     });
   }
 
+  loadData = () => {
+    for (var i=0; i < this.state.Sources.length; i++) {
+      let newState = [];
+      let source = this.state.Sources[i]
+      const articleReference = "Articles/" + source;
+      firebase.database().ref(articleReference).on('value', (snapshot) => {
+        const items = snapshot.val();
+        for (const article of items) {
+          newState.push({
+            title: article.title,
+            description: article.description,
+            author: article.author,
+            publishDate: article.publishedAt
+          });
+        }
+      });
+      this.state.items[i] = newState;
+    }
+    this.setState({
+      currSource: this.state.items[0],
+      isLoading: false
+    })
+  }
+
   handleClick = (source) => {
-    // console.log("WOW");
-    this.setState({currSource: source});
-    // console.log(this.state.currSource);
+    this.setState({
+      currSource: this.state.items[source]
+    });
   }
 
   render() {
-    console.log("RENDER")
-
-    if (!this.state.isLoading && this.state.currSource !== 0) {
+    if (!this.state.isLoading && this.state.items.length !== 0) {
       return (
         <div>
           <Header/>
@@ -65,10 +83,9 @@ class App extends Component {
                   <div class="p-3">
                     <h4 class="font-italic">Other Sources</h4>
                     <ol class="list-unstyled mb-0">
-                    {this.state.newSources.map((i, index) => {
+                    {this.state.Sources.map((i, index) => {
                       return (
-                        // i = CNN now instead of ARS-TECHNICA
-                        <li key={index} onClick={() => {this.handleClick(i)}}><a>{i}</a></li>
+                        <li key={index} onClick={() => {this.handleClick(index)}}><a>{i}</a></li>
                       )
                       })}
                     </ol>

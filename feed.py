@@ -1,11 +1,12 @@
 from newsapi import NewsApiClient
 # import pyrebase
 import json
-import datetime
+import dateutil.parser as date
 # Firebase admin packages
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+
 
 # cred = credentials.Certificate("path/to/serviceAccountKey.json")
 # firebase_admin.initialize_app(cred)
@@ -41,19 +42,17 @@ def getNews():
     sources = ['cnn', 'ars-technica', 'engadget', 'reuters', 'the-verge', 'wired']
     for i in sources:
         news = newsapi.get_top_headlines(sources=i)
-        readJson(i, news)
-    source = "technology"
-    news = newsapi.get_top_headlines(category='technology', country='us')
-    readJson(source, news)
+        articles = news["articles"]
+        for article in articles:
+            article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
+        addToFirebase(i, articles)
+
+    # source = "technology"
+    # news = newsapi.get_top_headlines(category='technology', country='us')
+    # readJson(source, news)
     
-
-def readJson(source, inputJson):
-    articles = inputJson["articles"]
-    addToFirebase(source, articles)
-
-
 def addToFirebase(dataSource, data):
     results = db.reference("Articles").child(dataSource).set(data)
 
 if __name__ == '__main__':
-    initFirebase()
+    initFirebase_viaADMIN()
