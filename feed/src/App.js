@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Articles from './Components/Articles';
-
 import Header from './Components/Header';
-
 import firebase from './firebase.js';
+/* npm run deploy */
 
 class App extends Component {
 		constructor(props) {
@@ -13,7 +12,8 @@ class App extends Component {
         Sources: [],
         items: [],
         isLoading: true,
-        currSource: []
+        currSource: [],
+        updateTime: 0,
       }
       this.loadData = this.loadData.bind(this);
     }
@@ -61,6 +61,13 @@ class App extends Component {
     this.setState({
       currSource: this.state.items[source]
     });
+  };
+
+  divStyle = {
+    fontSize: '24px',
+    color: 'black',
+    marginRight: '10px',
+    marginBottom: '20px',
   }
 
   render() {
@@ -77,11 +84,28 @@ class App extends Component {
                 <aside class="col-md-4 blog-sidebar">
                   <div class="p-3 mb-3 bg-light rounded">
                     <h4 class="font-italic">About</h4>
-                    <p class="mb-0">Feed is a news aggregator designed personally for myself (Karsten Fonseca) to save time.</p>
+                    <p class="mb-0">Feed is a news aggregator designed personally to save myself the time and hassle of visiting numerous websites to stay up to date. If you wanna learn more about me, check out my website, or my social media pages, linked below!</p>
+                  </div>
+
+                  <div class="p-3">
+                    <div class="ContactsBoxItem">
+                      <a href="https://www.facebook.com/karsten.fonseca/">
+                        <i class="fa fa-facebook" style={this.divStyle}></i>
+                      </a>
+                      <a href="https://github.com/Karsten12">
+                        <i class="fa fa-github" style={this.divStyle}> </i>
+                      </a>
+                      <a href="https://www.linkedin.com/in/karsten-fonseca">
+                        <i class="fa fa-linkedin" style={this.divStyle}> </i>
+                      </a>
+                      <a href="skype:k10_kars?chat">
+                        <i class="fa fa-skype" style={this.divStyle}> </i>
+                      </a>
+                    </div>
                   </div>
   
                   <div class="p-3">
-                    <h4 class="font-italic">Other Sources</h4>
+                    <h4 class="font-italic">Other News Sources</h4>
                     <ol class="list-unstyled mb-0">
                     {this.state.Sources.map((i, index) => {
                       return (
@@ -89,16 +113,7 @@ class App extends Component {
                       )
                       })}
                     </ol>
-                  </div>
-                  
-                  {/* <div class="p-3">
-                    <h4 class="font-italic">Elsewhere</h4>
-                    <ol class="list-unstyled">
-                      <li><a href="#">GitHub</a></li>
-                      <li><a href="#">Twitter</a></li>
-                      <li><a href="#">Facebook</a></li>
-                    </ol>
-                  </div> */}
+                  </div>    
   
                 </aside>
               </div>
