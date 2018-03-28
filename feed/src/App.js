@@ -92,7 +92,7 @@ class App extends Component {
                       <a href="https://www.facebook.com/karsten.fonseca/">
                         <i class="fa fa-facebook" style={this.divStyle}></i>
                       </a>
-                      <a href="https://github.com/Karsten12">
+                      <a href="https://karsten12.github.io">
                         <i class="fa fa-github" style={this.divStyle}> </i>
                       </a>
                       <a href="https://www.linkedin.com/in/karsten-fonseca">
