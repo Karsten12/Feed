@@ -1,8 +1,6 @@
 from newsapi import NewsApiClient
-# import pyrebase
 import json
 import dateutil.parser as date
-# Firebase admin packages
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -10,13 +8,7 @@ from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
   import Features, EntitiesOptions, KeywordsOptions
 
-
-# cred = credentials.Certificate("path/to/serviceAccountKey.json")
-# firebase_admin.initialize_app(cred)
-
-#  Class variables 
-newsapi = NewsApiClient(api_key='21b90e53af6a4713baf4fd0d3d33cd2b')
-# IBM auth
+newsapi = 0
 natural_language_understanding = 0
 
 def initFirebase():
@@ -28,11 +20,14 @@ def initFirebase():
     })
     getNews()
 
-def readIBMKEY():
+def read_keys():
     global natural_language_understanding 
+    global newsapi
+
     IBMKEYS = None 
-    fileName = "IBM-KEY.txt"
-    with open(fileName) as f:
+    # Read IBM KEY
+    file1 = "IBM-KEY.txt"
+    with open(file1) as f:
         content = f.readlines()
         IBMKEYS = [x.strip() for x in content]
 
@@ -41,6 +36,12 @@ def readIBMKEY():
         password=IBMKEYS[1],
         version='2018-03-16'
     )  
+
+    # Read NEWSAPI KEY
+    file2 = "NEWS-KEY.txt"
+    with open(file2) as f:
+        content = f.readline()
+        newsapi = NewsApiClient(api_key=content.strip())
 
 def IBM():
     response = natural_language_understanding.analyze(
@@ -61,7 +62,6 @@ def IBM():
         print(i["text"])
 
 def getNews():
-    # initFirebase()
     sources = ['cnn', 'ars-technica', 'engadget', 'reuters', 'the-verge', 'wired']
     for i in sources:
         news = newsapi.get_top_headlines(sources=i)
@@ -80,6 +80,6 @@ def addToFirebase(dataSource, data):
       
 
 if __name__ == '__main__':
-    # initFirebase()
-    readIBMKEY()
-    IBM()
+    read_keys()
+    initFirebase()
+    # IBM()
