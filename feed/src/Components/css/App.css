@@ -1,0 +1,24 @@
+.button {
+    background-color: gray; 
+    border: none;
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 14px;
+    width: 150px;
+    height: 50px;
+    padding: 0;
+    border-radius: 8px;
+
+}
+
+.button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.button:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}

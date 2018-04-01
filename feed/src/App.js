@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Articles from './Components/Articles';
 import Header from './Components/Header';
 import firebase from './firebase.js';
+import './Components/css/App.css';
+
 /* npm run deploy */
 
 class App extends Component {
@@ -45,7 +47,8 @@ class App extends Component {
             title: article.title,
             description: article.description,
             author: article.author,
-            publishDate: article.publishedAt
+            publishDate: article.publishedAt,
+            url: article.url,
           });
         }
       });
@@ -109,7 +112,9 @@ class App extends Component {
                     <ol class="list-unstyled mb-0">
                     {this.state.Sources.map((i, index) => {
                       return (
-                        <li key={index} onClick={() => {this.handleClick(index)}}><a>{i}</a></li>
+                        <li key={index} onClick={() => {this.handleClick(index)}}>
+                          <button className="button" type="button">{i}</button>
+                          </li>
                       )
                       })}
                     </ol>
