@@ -43,12 +43,10 @@ def read_keys():
         content = f.readline()
         newsapi = NewsApiClient(api_key=content.strip())
 
-def IBM():
+def IBM(inputText):
     response = natural_language_understanding.analyze(
         # text=inputText
-        text='IBM is an American multinational technology company '
-        'headquartered in Armonk, New York, United States, '
-        'with operations in over 170 countries.',
+        text=inputText,
         features=Features(
             keywords=KeywordsOptions(
                 emotion=True,
@@ -58,17 +56,31 @@ def IBM():
         )
     )
     keywords = response["keywords"]
+    data = []
     for i in keywords:
-        print(i["text"])
+        if (i['relevance'] >= float(.80)):
+            data.append(i["text"])
+            break
+    return data[0]
 
 def getNews():
     sources = ['cnn', 'ars-technica', 'engadget', 'reuters', 'the-verge', 'wired']
+    seenTitles = []
+    data = []
     for i in sources:
+        newArticles = []
         news = newsapi.get_top_headlines(sources=i)
         articles = news["articles"]
         for article in articles:
-            article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
-        addToFirebase(i, articles)
+            keyWord = IBM(str(article['title']))
+            if (keyWord not in seenTitles):
+                article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
+                seenTitles.append(keyWord)
+                newArticles.append(article)
+        data.append(newArticles)
+    for i in data:
+        addToFirebase(i[0]['source']['id'], i)
+    # cleanData(data)
 
     # source = "technology"
     # news = newsapi.get_top_headlines(category='technology', country='us')
@@ -82,4 +94,3 @@ def addToFirebase(dataSource, data):
 if __name__ == '__main__':
     read_keys()
     initFirebase()
-    # IBM()
