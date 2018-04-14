@@ -80,7 +80,6 @@ def getNews():
         data.append(newArticles)
     for i in data:
         addToFirebase(i[0]['source']['id'], i)
-    # cleanData(data)
 
     # source = "technology"
     # news = newsapi.get_top_headlines(category='technology', country='us')
@@ -89,7 +88,6 @@ def getNews():
 def addToFirebase(dataSource, data):
     results = db.reference("Articles").child(dataSource).set(data)
 
-      
 
 if __name__ == '__main__':
     read_keys()
