@@ -72,7 +72,7 @@ def getNews():
         news = newsapi.get_top_headlines(sources=i)
         articles = news["articles"]
         for article in articles:
-            keyWord = IBM(str(article['title']))
+            keyWord = IBM(article['title'])
             if (keyWord not in seenTitles):
                 article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
                 seenTitles.append(keyWord)
