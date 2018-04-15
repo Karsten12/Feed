@@ -58,9 +58,11 @@ def IBM(inputText):
     keywords = response["keywords"]
     data = []
     for i in keywords:
-        if (i['relevance'] >= float(.80)):
-            data.append(i["text"])
-            break
+        data.append(i["text"])
+        # if (i['relevance'] >= float(.80)):
+        #     data.append(i["text"])
+        #     break
+        break
     return data[0]
 
 def getNews():
@@ -71,13 +73,16 @@ def getNews():
         newArticles = []
         news = newsapi.get_top_headlines(sources=i)
         articles = news["articles"]
+        
         for article in articles:
-            keyWord = IBM(article['title'])
-            if (keyWord not in seenTitles):
+            keyWord = IBM(article['title']).lower()
+            # Check if keyWord is not in the seenTitles -> include article
+            if not any(x in keyWord for x in seenTitles):
                 article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
                 seenTitles.append(keyWord)
                 newArticles.append(article)
         data.append(newArticles)
+
     for i in data:
         addToFirebase(i[0]['source']['id'], i)
 
