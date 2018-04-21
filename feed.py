@@ -75,12 +75,14 @@ def getNews():
         articles = news["articles"]
         
         for article in articles:
-            keyWord = IBM(article['title']).lower()
-            # Check if keyWord is not in the seenTitles -> include article
-            if not any(x in keyWord for x in seenTitles):
-                article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
-                seenTitles.append(keyWord)
-                newArticles.append(article)
+            x = article['title'].lower()
+            if (len(x.split()) >= 3):
+                keyWord = IBM(x)
+                # Check if keyWord is not in the seenTitles -> include article
+                if not any(x in keyWord for x in seenTitles):
+                    article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
+                    seenTitles.append(keyWord)
+                    newArticles.append(article)
         data.append(newArticles)
 
     for i in data:
