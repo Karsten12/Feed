@@ -63,6 +63,8 @@ def IBM(inputText):
         #     data.append(i["text"])
         #     break
         break
+    if not data:
+        return ''
     return data[0]
 
 def getNews():
@@ -78,6 +80,8 @@ def getNews():
             x = article['title'].lower()
             if (len(x.split()) >= 3):
                 keyWord = IBM(x)
+                if (not keyWord):
+                    continue
                 # Check if keyWord is not in the seenTitles -> include article
                 if not any(x in keyWord for x in seenTitles):
                     article["publishedAt"] = str(date.parse(article["publishedAt"]).date().strftime("%m-%d-%Y"))
